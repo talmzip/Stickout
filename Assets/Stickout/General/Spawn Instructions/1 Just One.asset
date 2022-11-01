@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47dc5cc0e46f9e54ea6c6e66cd3fb672, type: 3}
+  m_Name: 1 Just One
+  m_EditorClassIdentifier: 
+  WaitBeforeStarting: 5
+  NormalSticksAmount: 1
+  OcclusionSticksAmount: 0
+  SpawnFrequency: 0
+  MaxConcurrentSticks: 1
+  SticksLifeTime: 10000000
