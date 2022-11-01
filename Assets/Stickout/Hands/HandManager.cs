@@ -105,7 +105,7 @@ public class HandManager : MonoBehaviour
 
     public void GetPhysicalBack()
     {
-        if (State == HandState.Ghost)
+        if (State != HandState.Physical)
         {
             Physical.ReAttach();
             pinchPoint.IsGhost = false;

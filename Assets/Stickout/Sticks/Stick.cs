@@ -103,9 +103,8 @@ public class Stick : MonoBehaviour
         {
             initialScale = new Vector3(9, 9, 0);
             prePopScale = new Vector3(11, 11, .1f);
-            prePopDuration = 1f;
-            regualrScale = new Vector3(2, 2, 4.5f);
-            pickedScale = new Vector3(.5f, .5f, 3.5f);
+            regualrScale = new Vector3(2, 2, 5f);
+            pickedScale = new Vector3(.5f, .5f, 4.5f);
             stickTip.transform.localScale *= 3f;
 
         }

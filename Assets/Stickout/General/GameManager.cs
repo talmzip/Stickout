@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public bool bStartFromLevel = false;
     public int StartFromLevel = 0;
     public SpawnInstructions[] AllSpawnInstructions;
     public int SpawnInstructionsIndex = -1;
@@ -51,9 +52,9 @@ public class GameManager : MonoBehaviour
             ScoreManager.Instance.ReCount();
 
             // for testing
-            if (StartFromLevel != 0) SpawnInstructionsIndex = StartFromLevel;
+            if (bStartFromLevel) SpawnInstructionsIndex = StartFromLevel;
         }
-        
+
 
         SticksManager.Instance.SetNewSpawnInstructions(AllSpawnInstructions[SpawnInstructionsIndex]);
     }
