@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: 2 Two Sticks
   m_EditorClassIdentifier: 
   WaitBeforeStarting: 1.5
+  SpawnGroup: 2
   NormalSticksAmount: 2
   OcclusionSticksAmount: 0
   SpawnFrequency: 0

@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47dc5cc0e46f9e54ea6c6e66cd3fb672, type: 3}
   m_Name: 4 - First Occlusion 1
   m_EditorClassIdentifier: 
-  WaitBeforeStarting: 0
+  WaitBeforeStarting: 3
+  SpawnGroup: 0
   NormalSticksAmount: 0
   OcclusionSticksAmount: 1
   SpawnFrequency: 0
   MaxConcurrentSticks: 1
+  SticksLifeTime: 15

@@ -48,6 +48,7 @@ public class Stick : MonoBehaviour
     public Transform HandDetector;
     public PinchPoint closerHand;       // the closest hand to stick (from all hands in range) 
     SticksManager stickManager;
+    public StickTip stickTip;
 
     float leanAmount = 1;
     float leanToHandSpeed = 4.39f;
@@ -96,8 +97,10 @@ public class Stick : MonoBehaviour
         startRotation = StickPivot.rotation;
 
         stickManager = GetComponentInParent<SticksManager>();
+
         // run appearence animation    
         StartCoroutine(AppearCo());
+
     }
 
     void Update()
@@ -187,6 +190,7 @@ public class Stick : MonoBehaviour
 
 
         StickPivot.localScale = initialScale;
+        stickTip.SetAppearence(false);
         //yield return new WaitForSecondsRealtime(Random.Range(3.0f, 10.0f));
 
         soundAppear.Play();
@@ -202,6 +206,8 @@ public class Stick : MonoBehaviour
 
         }
         #endregion
+
+        stickTip.SetAppearence(true);
 
         #region Pop
 

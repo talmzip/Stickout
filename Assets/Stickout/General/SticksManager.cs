@@ -36,11 +36,13 @@ public class SticksManager : MonoBehaviour
     public GameObject OcclusionStickPrefab;
 
     public SpawnPoint[] SpawnPoints;         // all spawn points.
+    public SpawnPoint[] AllButSingle;
+    public SpawnPoint[] AllButTwin;
     public List<Stick> SpawnedSticks;         // the stick ref and the spawn point index its spawned at.
 
     float timeFromLastSpawn = 0;
     int totalSticksToBeSpawned;               // how many sticks should be spawned in those instructions?
-    
+
     int sticksSpawnedTotal;
     int SticksSpawnedNormal;
     int sticksSpawnedOcclusion;
@@ -72,8 +74,25 @@ public class SticksManager : MonoBehaviour
 
         totalSticksToBeSpawned = currentSpawnInstructions.NormalSticksAmount + currentSpawnInstructions.OcclusionSticksAmount;
         timeFromLastSpawn = 0;
+        SetupSpawnGroup(inst.SpawnGroup);
 
         StartCoroutine(waitBeforeNextSpawnInstructions());
+    }
+
+    private void SetupSpawnGroup(SpawnGroup sg)
+    {
+        foreach (SpawnPoint sp in SpawnPoints) sp.IsTaken = false;
+        switch (sg)
+        {
+            case SpawnGroup.All:
+                return;
+            case SpawnGroup.Single:
+                foreach (SpawnPoint sp in AllButSingle) sp.IsTaken = true;
+                return;
+            case SpawnGroup.Twin:
+                foreach (SpawnPoint sp in AllButTwin) sp.IsTaken = true;
+                return;
+        }
     }
 
     IEnumerator waitBeforeNextSpawnInstructions()
@@ -129,20 +148,20 @@ public class SticksManager : MonoBehaviour
         int spawnIndex = GetEmptySpawnPointIndex(newStickType);
         if (spawnIndex == -1)
         {
-            Debug.Log("No more empty spawn points. Stick won't be summoned");
+            Debug.LogWarning("No more empty spawn points. Stick won't be summoned");
             return;
         }
 
         // spawn stick
-        Stick newStick = Instantiate(GetStickPrefab(newStickType), SpawnPoints[spawnIndex].Position, Quaternion.Euler(-90,0,0), transform).GetComponent<Stick>();
-        
+        Stick newStick = Instantiate(GetStickPrefab(newStickType), SpawnPoints[spawnIndex].Position, Quaternion.Euler(-90, 0, 0), transform).GetComponent<Stick>();
+
         newStick.LifeTime = currentSpawnInstructions.SticksLifeTime;
-        
+
         // update spawn point data
         SpawnPoints[spawnIndex].StickSpawned(newStick);
 
         newStick.SpawnIndex = spawnIndex;
-        
+
         // for occlusion sticks. Its ! because left points need to have right sticks (the crossing makes the trackloss)
         newStick.IsOcclusionLeft = !SpawnPoints[spawnIndex].isOcclusionLeft;
 
@@ -162,14 +181,14 @@ public class SticksManager : MonoBehaviour
         int i = 0;
 
         int normalSticksLeft = currentSpawnInstructions.NormalSticksAmount - GetStickAmountByType(StickType.Normal);
-        while(i<normalSticksLeft)
+        while (i < normalSticksLeft)
         {
             remainingTypes[i] = StickType.Normal;
             i++;
         }
 
         int occlusionSticksLeft = currentSpawnInstructions.OcclusionSticksAmount - GetStickAmountByType(StickType.Occlusion);
-        while(i< normalSticksLeft + occlusionSticksLeft)
+        while (i < normalSticksLeft + occlusionSticksLeft)
         {
             remainingTypes[i] = StickType.Occlusion;
             i++;
@@ -216,22 +235,23 @@ public class SticksManager : MonoBehaviour
         // save all empty indexes
         List<int> emptyPoints = new List<int>();
         for (int i = 0; i < SpawnPoints.Length; i++)
-            if (IsSpawnPointAvailable(SpawnPoints[i],spawnPointType))
+            if (IsSpawnPointAvailable(SpawnPoints[i], spawnPointType))
                 emptyPoints.Add(i);
 
-        if (emptyPoints.Count == 0) return -1;
+        if (emptyPoints.Count == 0)
+            return -1;
 
         // choose a random one
         int spawnIndex = Random.Range(0, emptyPoints.Count);
- 
+
         return emptyPoints[spawnIndex];
     }
 
     // gets a spawn point and a desired type and returns true if its currently availabe.
-    private bool IsSpawnPointAvailable(SpawnPoint sp ,StickType type)
+    private bool IsSpawnPointAvailable(SpawnPoint sp, StickType type)
     {
         // if it matches the type and is not taken
-        if(sp.Type == type && !sp.IsTaken)
+        if (sp.Type == type && !sp.IsTaken)
         {
             // if its occlusion make sure the picking hand is not ghost. if it is- return false so that a left occlustion point won't be summoned when player's left hand is ghost.
             if (type == StickType.Occlusion)
@@ -264,7 +284,7 @@ public class SticksManager : MonoBehaviour
 
     public void StickPickedUp(Stick pickedStick, bool isBonus)
     {
-        ScoreManager.Instance.AddScore(pickedStick.Type,isBonus);
+        ScoreManager.Instance.AddScore(pickedStick.Type, isBonus);
         RemoveStick(pickedStick);
     }
 
@@ -288,7 +308,7 @@ public class SticksManager : MonoBehaviour
         foreach (Stick s in SpawnedSticks) s.Fold();
 
         // wait until them all folds
-        if (SpawnedSticks.Count > 0) 
+        if (SpawnedSticks.Count > 0)
             yield return new WaitForSecondsRealtime(SpawnedSticks[0].CompleteFoldDuration + 5);
 
         GameManager.Instance.Restart();

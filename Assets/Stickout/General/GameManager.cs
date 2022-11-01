@@ -36,7 +36,11 @@ public class GameManager : MonoBehaviour
     public void NextSpawnInstructions()
     {
         // stop when completing all spawn instructions
-        if (SpawnInstructionsIndex >= AllSpawnInstructions.Length - 1) return;
+        if (SpawnInstructionsIndex >= AllSpawnInstructions.Length - 1)
+        {
+            StartCoroutine(GameWon());
+            return;
+        }
 
         SpawnInstructionsIndex++;
 
@@ -66,4 +70,10 @@ public class GameManager : MonoBehaviour
         NextSpawnInstructions();
     }
 
+    IEnumerator GameWon()
+    {
+        ScoreManager.Instance.GameWon();
+        yield return new WaitForSecondsRealtime(5);
+        Restart();
+    }
 }

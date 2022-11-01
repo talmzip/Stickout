@@ -644,6 +644,7 @@ MonoBehaviour:
   StickPivot: {fileID: 6901885861587593595}
   HandDetector: {fileID: 6901885862969126392}
   closerHand: {fileID: 0}
+  stickTip: {fileID: 6901885863025206843}
   prePopDuration: 0.5
   prePopCurve:
     serializedVersion: 2

@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class StickTip : MonoBehaviour
 {
+    MeshRenderer mr;
 
     public Transform tipPosition;
-    void Start()
+
+    private void Awake()
     {
-        
+        mr = GetComponent<MeshRenderer>();
     }
 
-    void Update()
+    void Start()
+    {
+        mr.enabled = false;
+    }
+
+    void LateUpdate()
     {
         transform.position = tipPosition.position;
     }
+
+    public void SetAppearence(bool state) => mr.enabled = state;
 }

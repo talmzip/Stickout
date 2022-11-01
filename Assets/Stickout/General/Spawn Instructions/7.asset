@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: 7
   m_EditorClassIdentifier: 
   WaitBeforeStarting: 0
-  NormalSticksAmount: 100
-  OcclusionSticksAmount: 15
-  SpawnFrequency: 0.7
+  SpawnGroup: 0
+  NormalSticksAmount: 200
+  OcclusionSticksAmount: 30
+  SpawnFrequency: 0.6
   MaxConcurrentSticks: 20
+  SticksLifeTime: 10

@@ -121,4 +121,8 @@ public class ScoreManager : MonoBehaviour
 
     }
 
+    public void GameWon()
+    {
+        ScoreText.text = "WELL DONE";
+    }
 }
