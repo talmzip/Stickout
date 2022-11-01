@@ -30,7 +30,7 @@ public class SticksManager : MonoBehaviour
     }
     #endregion
 
-    public SpawnInstructions[] spawnInstructions;
+    public SpawnInstructions currentSpawnInstructions;
     public int spawnInstructionsIndex = -1;
     public GameObject NormalStickPrefab;
     public GameObject OcclusionStickPrefab;
@@ -52,7 +52,6 @@ public class SticksManager : MonoBehaviour
         SpawnedSticks = new List<Stick>();
         SpawnPoints = GetComponentsInChildren<SpawnPoint>();
 
-        NextSpawnInstructions();
     }
 
     void ClearSticksList()
@@ -62,32 +61,24 @@ public class SticksManager : MonoBehaviour
         SpawnedSticks.Clear();
     }
 
-    public void NextSpawnInstructions()
+    public void SetNewSpawnInstructions(SpawnInstructions inst)
     {
-        if (spawnInstructionsIndex >= spawnInstructions.Length - 1) return;
-        if (spawnInstructionsIndex == 0) ScoreManager.Instance.ResetScore();
+        currentSpawnInstructions = inst;
 
-        spawnInstructionsIndex++;
-        
         ClearSticksList();
         sticksSpawnedOcclusion = 0;
         sticksSpawnedTotal = 0;
         SticksSpawnedNormal = 0;
-        
-        totalSticksToBeSpawned = spawnInstructions[spawnInstructionsIndex].NormalSticksAmount + spawnInstructions[spawnInstructionsIndex].OcclusionSticksAmount;
+
+        totalSticksToBeSpawned = currentSpawnInstructions.NormalSticksAmount + currentSpawnInstructions.OcclusionSticksAmount;
         timeFromLastSpawn = 0;
 
         StartCoroutine(waitBeforeNextSpawnInstructions());
     }
 
-    public void SetNewSpawnInstructions(SpawnInstructions inst)
-    {
-
-    }
-
     IEnumerator waitBeforeNextSpawnInstructions()
     {
-        yield return new WaitForSecondsRealtime(spawnInstructions[spawnInstructionsIndex].WaitBeforeStarting);
+        yield return new WaitForSecondsRealtime(currentSpawnInstructions.WaitBeforeStarting);
         shouldSpawn = true;
     }
 
@@ -100,12 +91,12 @@ public class SticksManager : MonoBehaviour
         if (sticksSpawnedTotal < totalSticksToBeSpawned)
         {
             // can spawn more sticks now?
-            if (SpawnedSticks.Count < spawnInstructions[spawnInstructionsIndex].MaxConcurrentSticks)
+            if (SpawnedSticks.Count < currentSpawnInstructions.MaxConcurrentSticks)
             {
                 timeFromLastSpawn += Time.deltaTime;
 
                 // is it time to spawn?
-                if (timeFromLastSpawn >= spawnInstructions[spawnInstructionsIndex].SpawnFrequency)
+                if (timeFromLastSpawn >= currentSpawnInstructions.SpawnFrequency)
                 {
                     timeFromLastSpawn = 0;
                     SpawnStick();
@@ -125,7 +116,8 @@ public class SticksManager : MonoBehaviour
     {
         while (SpawnedSticks.Count > 0)
             yield return null;
-        NextSpawnInstructions();
+
+        GameManager.Instance.AllSticksGotPicked();
     }
 
     #region Stick Spawning
@@ -144,7 +136,7 @@ public class SticksManager : MonoBehaviour
         // spawn stick
         Stick newStick = Instantiate(GetStickPrefab(newStickType), SpawnPoints[spawnIndex].Position, Quaternion.Euler(-90,0,0), transform).GetComponent<Stick>();
         
-        newStick.LifeTime = spawnInstructions[spawnInstructionsIndex].SticksLifeTime;
+        newStick.LifeTime = currentSpawnInstructions.SticksLifeTime;
         
         // update spawn point data
         SpawnPoints[spawnIndex].StickSpawned(newStick);
@@ -169,14 +161,14 @@ public class SticksManager : MonoBehaviour
         StickType[] remainingTypes = new StickType[totalSticksToBeSpawned - SpawnedSticks.Count];
         int i = 0;
 
-        int normalSticksLeft = spawnInstructions[spawnInstructionsIndex].NormalSticksAmount - GetStickAmountByType(StickType.Normal);
+        int normalSticksLeft = currentSpawnInstructions.NormalSticksAmount - GetStickAmountByType(StickType.Normal);
         while(i<normalSticksLeft)
         {
             remainingTypes[i] = StickType.Normal;
             i++;
         }
 
-        int occlusionSticksLeft = spawnInstructions[spawnInstructionsIndex].OcclusionSticksAmount - GetStickAmountByType(StickType.Occlusion);
+        int occlusionSticksLeft = currentSpawnInstructions.OcclusionSticksAmount - GetStickAmountByType(StickType.Occlusion);
         while(i< normalSticksLeft + occlusionSticksLeft)
         {
             remainingTypes[i] = StickType.Occlusion;
@@ -299,12 +291,6 @@ public class SticksManager : MonoBehaviour
         if (SpawnedSticks.Count > 0) 
             yield return new WaitForSecondsRealtime(SpawnedSticks[0].CompleteFoldDuration + 5);
 
-        // get hands back to normal state
-        Player.Instance.HandManagerR.GetPhysicalBack();
-        Player.Instance.HandManagerL.GetPhysicalBack();
-
-        // restart
-        spawnInstructionsIndex = -1;
-        NextSpawnInstructions();
+        GameManager.Instance.Restart();
     }
 }

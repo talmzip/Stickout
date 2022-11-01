@@ -4,35 +4,66 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    #region Singelton Decleration
+
+    private static GameManager _instance;
+
+    public static GameManager Instance { get { return _instance; } }
+
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
+    }
+    #endregion
+
     public SpawnInstructions[] AllSpawnInstructions;
-    public int InstructionsIndex = -1;
+    public int SpawnInstructionsIndex = -1;
 
     void Start()
     {
-        
+        NextSpawnInstructions();
     }
 
-    void Update()
-    {
-        
-    }
 
     public void NextSpawnInstructions()
     {
-        if (InstructionsIndex >= AllSpawnInstructions.Length - 1) return;
+        // stop when completing all spawn instructions
+        if (SpawnInstructionsIndex >= AllSpawnInstructions.Length - 1) return;
 
-        if (InstructionsIndex == 0) ScoreManager.Instance.ResetScore();
+        SpawnInstructionsIndex++;
 
-        InstructionsIndex++;
+        // Reset score after first level (the single stick level)
+        if (SpawnInstructionsIndex == 1) ScoreManager.Instance.ReCount();
 
-       /* ClearSticksList();
-        sticksSpawnedOcclusion = 0;
-        sticksSpawnedTotal = 0;
-        SticksSpawnedNormal = 0;
 
-        totalSticksToBeSpawned = spawnInstructions[spawnInstructionsIndex].NormalSticksAmount + spawnInstructions[spawnInstructionsIndex].OcclusionSticksAmount;
-        timeFromLastSpawn = 0;
-
-        StartCoroutine(waitBeforeNextSpawnInstructions());*/
+        SticksManager.Instance.SetNewSpawnInstructions(AllSpawnInstructions[SpawnInstructionsIndex]);
     }
+
+    public void AllSticksGotPicked()
+    {
+        NextSpawnInstructions();
+    }
+
+    // called from SticksManager after a stick collapsed event.
+    public void Restart()
+    {
+        // get hands back to normal state
+        Player.Instance.HandManagerR.GetPhysicalBack();
+        Player.Instance.HandManagerL.GetPhysicalBack();
+
+        ScoreManager.Instance.ResetScore();
+
+        // restart
+        SpawnInstructionsIndex = -1;
+        NextSpawnInstructions();
+    }
+
 }
