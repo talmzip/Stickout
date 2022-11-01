@@ -27,7 +27,7 @@ public class HandManager : MonoBehaviour
     void Start()
     {
         TrackingLossSound = GetComponent<AudioSource>();
-        Physical.Init(this,skeleton);
+        Physical.Init(this, skeleton);
 
         Ghost.ChangeColor(Color.clear);
 
@@ -36,15 +36,15 @@ public class HandManager : MonoBehaviour
 
     void Update()
     {
-        if(skeleton.IsDataHighConfidence)
+        if (skeleton.IsDataHighConfidence)
         {
-            if(State == HandState.Physical)
+            if (State == HandState.Physical)
                 Physical.TrackHandMovements();
         }
         else
-            if(State !=HandState.Transition)
-                if(Time.time > 5)    
-                    OnTrackingLost();
+            if (State != HandState.Transition)
+            if (GameManager.Instance.SpawnInstructionsIndex > 0)
+                OnTrackingLost();
 
     }
 

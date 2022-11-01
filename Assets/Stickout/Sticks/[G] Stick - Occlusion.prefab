@@ -807,7 +807,7 @@ MonoBehaviour:
   soundAppear: {fileID: 3560059231040706793}
   soundFold: {fileID: 3526441083376768689}
   IsOcclusionLeft: 0
-  pinchHoldTime: 1
+  pinchHoldTime: 0.7
   isBeingPinched: 0
 --- !u!1 &6868673128983103776
 GameObject:

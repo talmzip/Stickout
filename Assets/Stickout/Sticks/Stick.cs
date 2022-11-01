@@ -64,12 +64,13 @@ public class Stick : MonoBehaviour
 
     public Vector3 initialScale = new Vector3(5, 5, 0);
     public Vector3 prePopScale = new Vector3(7, 7, .05f);
+    private Vector3 regualrScale = Vector3.one;
 
     [Header("Picked Animation")]
     public float pickedAnimDuration = .3f;
     public AnimationCurve pickedAnimScaleCurve;
     public AnimationCurve pickedAnimColorCurve;
-    public Vector3 pickedScale = new Vector3(.6f,.6f,1.8f);
+    public Vector3 pickedScale = new Vector3(.6f, .6f, 1.8f);
 
     [Header("Stage Fold")]
     public float foldDuration;
@@ -97,6 +98,17 @@ public class Stick : MonoBehaviour
         startRotation = StickPivot.rotation;
 
         stickManager = GetComponentInParent<SticksManager>();
+
+        if (Type == StickType.Jumper)
+        {
+            initialScale = new Vector3(9, 9, 0);
+            prePopScale = new Vector3(11, 11, .1f);
+            prePopDuration = 1f;
+            regualrScale = new Vector3(2, 2, 4.5f);
+            pickedScale = new Vector3(.5f, .5f, 3.5f);
+            stickTip.transform.localScale *= 3f;
+
+        }
 
         // run appearence animation    
         StartCoroutine(AppearCo());
@@ -138,7 +150,7 @@ public class Stick : MonoBehaviour
     // called from StickHandDetector upon a valid pinch detection.
     public void ValidPinchDetected()
     {
-        if(isPickable)
+        if (isPickable)
             Pickup();
     }
 
@@ -183,7 +195,7 @@ public class Stick : MonoBehaviour
         StartCoroutine(CompleteFold());
     }
 
-   IEnumerator AppearCo()
+    IEnumerator AppearCo()
     {
         Stage = StickStage.High;
         #region Pre Pop
@@ -195,7 +207,7 @@ public class Stick : MonoBehaviour
 
         soundAppear.Play();
         float lerpTime = 0;
-        while(lerpTime<prePopDuration)
+        while (lerpTime < prePopDuration)
         {
             lerpTime += Time.deltaTime;
             float t = lerpTime / prePopDuration;
@@ -218,16 +230,17 @@ public class Stick : MonoBehaviour
             float t = lerpTime / popDuration;
             t = popCurve.Evaluate(t);
 
-            float x = Mathf.Lerp(prePopScale.x, 1, t);
+            // I'm doing this and not directly lerping to a vector 3 because of the curve that makes the x,y values to go negative if unclamped
+            float x = Mathf.Lerp(prePopScale.x, regualrScale.x, t);
             float y = x;
-            float z = Mathf.LerpUnclamped(prePopScale.z, 1, t);
-            //StickPivot.localScale = Vector3.LerpUnclamped(prePopScale, Vector3.one, t);
+            float z = Mathf.LerpUnclamped(prePopScale.z, regualrScale.z, t);
+
             StickPivot.localScale = new Vector3(x, y, z);
-            if(!loopAppearence) // this if is for testing. otherwise, stick should become pickable when height enough, roughly after t>.5
-            if (z>.7f) isPickable = true;
+            if (!loopAppearence) // this if is for testing. otherwise, stick should become pickable when height enough, roughly after t>.5
+                if (z > .7f) isPickable = true;
 
             yield return null;
-           
+
         }
 
         #endregion
@@ -235,26 +248,26 @@ public class Stick : MonoBehaviour
         StartCoroutine(CollapseCo());
     }
 
-   IEnumerator PickedCo()
+    IEnumerator PickedCo()
     {
         Color oColor = StickMR.material.color;
         Color finalColor = new Color(oColor.r, oColor.g, oColor.b, 0);
 
-        pickupSwish.pitch = Random.Range(1f,1.3f);
+        pickupSwish.pitch = Random.Range(1f, 1.3f);
         pickupSwish.Play();
         pickupScore.Play();
 
 
         float lerpTime = 0;
-        while(lerpTime < pickedAnimDuration)
+        while (lerpTime < pickedAnimDuration)
         {
             lerpTime += Time.deltaTime;
 
             // change size
             float tScale = lerpTime / pickedAnimDuration;
             tScale = pickedAnimScaleCurve.Evaluate(tScale);
-            StickPivot.localScale = Vector3.LerpUnclamped(Vector3.one, pickedScale, tScale);
-            
+            StickPivot.localScale = Vector3.LerpUnclamped(regualrScale, pickedScale, tScale);
+
             // change color
             float tColor = lerpTime / pickedAnimDuration;
             tColor = pickedAnimColorCurve.Evaluate(tColor);
@@ -264,10 +277,10 @@ public class Stick : MonoBehaviour
 
         }
 
-        SticksManager.Instance.StickPickedUp(this,Stage==StickStage.Bonus);
+        SticksManager.Instance.StickPickedUp(this, Stage == StickStage.Bonus);
     }
-    
-   IEnumerator CollapseCo()
+
+    IEnumerator CollapseCo()
     {
         yield return new WaitForSecondsRealtime(LifeTime / 3);
 
@@ -284,12 +297,13 @@ public class Stick : MonoBehaviour
         stickManager.StickCollapsed(this);
     }
 
-   IEnumerator FoldToStage(StickStage fallToStage)
+    IEnumerator FoldToStage(StickStage fallToStage)
     {
         // don't fold if while being pinched
         while (isBeingPinched) yield return null;
 
         Color oColor = StickMR.material.color;
+        Vector3 TipScale = stickTip.transform.localScale;
 
         soundFold.Stop();
         soundFold.Play();
@@ -302,10 +316,13 @@ public class Stick : MonoBehaviour
             t = foldCurve.Evaluate(t);
 
             StickPivot.localScale = Vector3.LerpUnclamped(GetStageScale(Stage), GetStageScale(fallToStage), t);
-            
+
             if (fallToStage == StickStage.Low)
                 StickMR.material.color = Color.Lerp(oColor, Color.red, t);
-            
+
+            if(fallToStage == StickStage.Folded)
+                stickTip.transform.localScale = Vector3.Lerp(TipScale, Vector3.zero, t);
+
             yield return null;
 
         }
@@ -317,21 +334,35 @@ public class Stick : MonoBehaviour
     {
         float lerpTime = 0;
         Vector3 CurrentScale = StickPivot.localScale;
+        Vector3 TipScale = stickTip.transform.localScale;
         while (lerpTime < CompleteFoldDuration)
         {
             lerpTime += Time.deltaTime;
             float t = lerpTime / CompleteFoldDuration;
 
             StickPivot.localScale = Vector3.Lerp(CurrentScale, GetStageScale(StickStage.Folded), t);
+            stickTip.transform.localScale = Vector3.Lerp(TipScale, Vector3.zero, t);
 
             yield return null;
 
         }
     }
 
-   Vector3 GetStageScale(StickStage stage)
+    Vector3 GetStageScale(StickStage stage)
     {
-        switch(stage)
+        if (Type == StickType.Jumper)
+        {
+            switch (stage)
+            {
+                case StickStage.High: return new Vector3(2, 2, 4.5f);
+                case StickStage.Medium: return new Vector3(1, 1, 4.5f);
+                case StickStage.Low: return new Vector3(.5f, .5f, 4.5f);
+                case StickStage.Folded: return new Vector3(.5f, .5f, 0f);
+                default: return Vector3.one;
+            }
+        }
+
+        switch (stage)
         {
             case StickStage.High: return Vector3.one;
             case StickStage.Medium: return new Vector3(1, 1, foldMidHeight);
@@ -339,5 +370,7 @@ public class Stick : MonoBehaviour
             case StickStage.Folded: return new Vector3(1, 1, 0f);
             default: return Vector3.one;
         }
+
+        
     }
 }

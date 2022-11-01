@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
     }
     #endregion
 
+    public int StartFromLevel = 0;
     public SpawnInstructions[] AllSpawnInstructions;
     public int SpawnInstructionsIndex = -1;
 
@@ -45,8 +46,14 @@ public class GameManager : MonoBehaviour
         SpawnInstructionsIndex++;
 
         // Reset score after first level (the single stick level)
-        if (SpawnInstructionsIndex == 1) ScoreManager.Instance.ReCount();
+        if (SpawnInstructionsIndex == 1)
+        {
+            ScoreManager.Instance.ReCount();
 
+            // for testing
+            if (StartFromLevel != 0) SpawnInstructionsIndex = StartFromLevel;
+        }
+        
 
         SticksManager.Instance.SetNewSpawnInstructions(AllSpawnInstructions[SpawnInstructionsIndex]);
     }

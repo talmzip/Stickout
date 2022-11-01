@@ -17,6 +17,7 @@ public class SpawnInstructions : ScriptableObject
 
     public int NormalSticksAmount;
     public int OcclusionSticksAmount;
+    public int JumperSticksAmount;
 
     public float SpawnFrequency;
     public int MaxConcurrentSticks;

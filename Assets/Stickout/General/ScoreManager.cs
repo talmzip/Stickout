@@ -41,6 +41,18 @@ public class ScoreManager : MonoBehaviour
         ScoreText.color = Color.clear;
     }
 
+    public void AddScore()
+    {
+        // first score is added after first stick is taken, should be added only after appearence not before.
+        if (TotalScore == 0)
+            return;
+       
+        TotalScore++;
+        ScoreText.text = TotalScore.ToString();
+
+    }
+
+    // OLD
     public void AddScore(StickType type, bool isBonus)
     {
         // first score is added after first stick is taken, should be added only after appearence not before.
@@ -123,6 +135,6 @@ public class ScoreManager : MonoBehaviour
 
     public void GameWon()
     {
-        ScoreText.text = "WELL DONE";
+        ScoreText.text = "OKAY";
     }
 }

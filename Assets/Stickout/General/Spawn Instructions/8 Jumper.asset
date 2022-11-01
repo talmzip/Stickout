@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47dc5cc0e46f9e54ea6c6e66cd3fb672, type: 3}
-  m_Name: 7
+  m_Name: 8 Jumper
   m_EditorClassIdentifier: 
-  WaitBeforeStarting: 0
+  WaitBeforeStarting: 5
   SpawnGroup: 0
-  NormalSticksAmount: 20
-  OcclusionSticksAmount: 3
-  JumperSticksAmount: 0
-  SpawnFrequency: 0.5
-  MaxConcurrentSticks: 20
+  NormalSticksAmount: 0
+  OcclusionSticksAmount: 0
+  JumperSticksAmount: 1
+  SpawnFrequency: 0
+  MaxConcurrentSticks: 1
   SticksLifeTime: 10

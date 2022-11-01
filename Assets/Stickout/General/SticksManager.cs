@@ -32,20 +32,20 @@ public class SticksManager : MonoBehaviour
 
     public SpawnInstructions currentSpawnInstructions;
     public int spawnInstructionsIndex = -1;
+    
+    public List<Stick> SpawnedSticks;         // the stick ref and the spawn point index its spawned at.
+    
     public GameObject NormalStickPrefab;
     public GameObject OcclusionStickPrefab;
+    public GameObject JumperStickPrefab;
 
     public SpawnPoint[] SpawnPoints;         // all spawn points.
     public SpawnPoint[] AllButSingle;
     public SpawnPoint[] AllButTwin;
-    public List<Stick> SpawnedSticks;         // the stick ref and the spawn point index its spawned at.
 
-    float timeFromLastSpawn = 0;
     int totalSticksToBeSpawned;               // how many sticks should be spawned in those instructions?
-
     int sticksSpawnedTotal;
-    int SticksSpawnedNormal;
-    int sticksSpawnedOcclusion;
+    float timeFromLastSpawn = 0;
 
     bool shouldSpawn = false;
 
@@ -68,11 +68,9 @@ public class SticksManager : MonoBehaviour
         currentSpawnInstructions = inst;
 
         ClearSticksList();
-        sticksSpawnedOcclusion = 0;
         sticksSpawnedTotal = 0;
-        SticksSpawnedNormal = 0;
 
-        totalSticksToBeSpawned = currentSpawnInstructions.NormalSticksAmount + currentSpawnInstructions.OcclusionSticksAmount;
+        totalSticksToBeSpawned = currentSpawnInstructions.NormalSticksAmount + currentSpawnInstructions.OcclusionSticksAmount + currentSpawnInstructions.JumperSticksAmount;
         timeFromLastSpawn = 0;
         SetupSpawnGroup(inst.SpawnGroup);
 
@@ -194,6 +192,13 @@ public class SticksManager : MonoBehaviour
             i++;
         }
 
+        int jumperSticksLeft = currentSpawnInstructions.JumperSticksAmount - GetStickAmountByType(StickType.Jumper);
+        while (i < normalSticksLeft + occlusionSticksLeft + jumperSticksLeft)
+        {
+            remainingTypes[i] = StickType.Jumper;
+            i++;
+        }
+
         // this if should never be true
         if (remainingTypes.Length == 0)
         {
@@ -219,11 +224,11 @@ public class SticksManager : MonoBehaviour
         switch (type)
         {
             case StickType.Normal:
-                SticksSpawnedNormal++;
                 return NormalStickPrefab;
             case StickType.Occlusion:
-                sticksSpawnedOcclusion++;
                 return OcclusionStickPrefab;
+            case StickType.Jumper:
+                return JumperStickPrefab;
             default:
                 return NormalStickPrefab;
         }
@@ -284,7 +289,7 @@ public class SticksManager : MonoBehaviour
 
     public void StickPickedUp(Stick pickedStick, bool isBonus)
     {
-        ScoreManager.Instance.AddScore(pickedStick.Type, isBonus);
+        ScoreManager.Instance.AddScore();
         RemoveStick(pickedStick);
     }
 

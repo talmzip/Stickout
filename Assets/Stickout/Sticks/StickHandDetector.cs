@@ -30,7 +30,8 @@ public class StickHandDetector : MonoBehaviour
 
     private void Update()
     {
-        transform.position = stick.transform.position + new Vector3(0, stick.StickMesh.transform.localScale.y * stick.StickPivot.transform.localScale.z + .1f, 0);
+        Vector3 DetectorPosition = new Vector3(stick.transform.position.x, StickTipMesh.position.y, stick.transform.position.z);
+        transform.position = DetectorPosition;
 
         if (HandsInRange.Count > 1)
             stick.LeanTowards(GetCloserHand().transform.position);
@@ -79,7 +80,7 @@ public class StickHandDetector : MonoBehaviour
 
             float t = pinchingTime / stick.pinchHoldTime;
             t = Mathf.Sin(t * Mathf.PI * 0.5f);
-            tipMR.material.color = Color.Lerp(tipStartColor, Color.cyan, t);
+            tipMR.material.color = Color.Lerp(tipStartColor, Color.white, t);
 
             stick.isBeingPinched = pinchingTime > 0;
 
@@ -90,7 +91,7 @@ public class StickHandDetector : MonoBehaviour
     {
         if (pp.IsGhost) return;
 
-        if (stick.Type == StickType.Normal)
+        if (stick.Type == StickType.Normal || stick.Type == StickType.Jumper)
         {
             if (stick.isPickable)
             {
