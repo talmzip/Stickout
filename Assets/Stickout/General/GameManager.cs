@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     public SpawnInstructions[] AllSpawnInstructions;
     public int SpawnInstructionsIndex = -1;
 
+    public AudioSource gameoversound;
     void Start()
     {
         NextSpawnInstructions();
@@ -68,16 +69,21 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         // get hands back to normal state
-        Player.Instance.HandManagerR.GetPhysicalBack();
+        /* no need to, will recover
+         * Player.Instance.HandManagerR.GetPhysicalBack();
         Player.Instance.HandManagerL.GetPhysicalBack();
-
+        */
         ScoreManager.Instance.ResetScore();
 
         // restart
         SpawnInstructionsIndex = -1;
         NextSpawnInstructions();
     }
+    public void PlayGameOverSound()
+    {
+        gameoversound.Play();
 
+    }
     IEnumerator GameWon()
     {
         ScoreManager.Instance.GameWon();

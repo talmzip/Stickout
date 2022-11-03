@@ -305,8 +305,10 @@ public class SticksManager : MonoBehaviour
 
     IEnumerator EndGame()
     {
+        GameManager.Instance.PlayGameOverSound();
+
         // stop all sticks
-        foreach (Stick s in SpawnedSticks) s.StopAllCoroutines();
+        foreach (Stick s in SpawnedSticks) s.StopAllCoroutines(); // TODO: don't stop the pickup coroutine
 
         yield return new WaitForSecondsRealtime(2);
         // fold all sticks
@@ -314,7 +316,7 @@ public class SticksManager : MonoBehaviour
 
         // wait until them all folds
         if (SpawnedSticks.Count > 0)
-            yield return new WaitForSecondsRealtime(SpawnedSticks[0].CompleteFoldDuration + 5);
+            yield return new WaitForSecondsRealtime(SpawnedSticks[0].CompleteFoldDuration + 1);
 
         GameManager.Instance.Restart();
     }

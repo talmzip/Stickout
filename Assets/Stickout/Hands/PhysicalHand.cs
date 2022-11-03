@@ -69,6 +69,8 @@ public class PhysicalHand : MonoBehaviour
 
     IEnumerator reattachCoroutine()
     {
+        handManager.State = HandState.Physical;
+
         Vector3[] bonesStartPositions = new Vector3[Bones.Length];
         Quaternion[] bonesStartRotations = new Quaternion[Bones.Length];
 
@@ -79,11 +81,11 @@ public class PhysicalHand : MonoBehaviour
         }
 
         float lerpTime = 0;
-        while (lerpTime < 1f)
+        while (lerpTime < .5f)
         {
             lerpTime += Time.deltaTime;
-            float t = lerpTime / 1f;
-            t = ToDetachedCurve.Evaluate(t);
+            float t = lerpTime / .5f;
+            t = Mathf.Sin(t * Mathf.PI * 0.5f);
 
             for (int i = 0; i < Bones.Length; i++)
             {
@@ -96,7 +98,6 @@ public class PhysicalHand : MonoBehaviour
             yield return null;
         }
 
-        handManager.State = HandState.Physical;
         IsAttached = true;
     }
 }

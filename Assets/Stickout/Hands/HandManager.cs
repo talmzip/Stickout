@@ -24,6 +24,8 @@ public class HandManager : MonoBehaviour
 
     AudioSource TrackingLossSound;
 
+    public float RecoveryTime = 5;
+   
     void Start()
     {
         TrackingLossSound = GetComponent<AudioSource>();
@@ -43,7 +45,7 @@ public class HandManager : MonoBehaviour
         }
         else
             if (State != HandState.Transition)
-            if (GameManager.Instance.SpawnInstructionsIndex > 0)
+            if (GameManager.Instance.SpawnInstructionsIndex > -1)
                 OnTrackingLost();
 
     }
@@ -68,7 +70,6 @@ public class HandManager : MonoBehaviour
 
         }
 
-        State = HandState.Transition;
 
         Ghost.ChangeColor(Color.clear);
         StartCoroutine(revealGhostAfterTrackingReturn());
@@ -86,6 +87,9 @@ public class HandManager : MonoBehaviour
     // fades in ghost hand (called when tracking is gained after was lost)
     private IEnumerator revealGhostAfterTrackingReturn()
     {
+        bool wasHandPhysical = State == HandState.Physical;
+        State = HandState.Transition;
+
         while (!skeleton.IsDataHighConfidence) yield return null;
 
         float lerpTime = 0;
@@ -99,8 +103,21 @@ public class HandManager : MonoBehaviour
 
             yield return null;
         }
+        
+        // so it won't get called when tracking loss occured on ghost 
+        if(wasHandPhysical)
+            StartCoroutine(CountToHandRecovery());
+
 
         State = HandState.Ghost;
+
+    }
+
+    IEnumerator CountToHandRecovery()
+    {
+        yield return new WaitForSecondsRealtime(RecoveryTime);
+        // make physical pinch point appear and detect recovery.
+        pinchPoint.RecoveryOn();
     }
 
     public void GetPhysicalBack()
