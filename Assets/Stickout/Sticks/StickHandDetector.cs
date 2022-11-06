@@ -125,7 +125,7 @@ public class StickHandDetector : MonoBehaviour
         {
             PinchPoint pp = other.GetComponent<PinchPoint>();
             HandsInRange.Add(pp);
-            pp.HandPinchEnter += HandPinched;
+            pp.OnPinchEnter += HandPinched;
         }
     }
 
@@ -135,7 +135,7 @@ public class StickHandDetector : MonoBehaviour
         {
             PinchPoint pp = other.GetComponent<PinchPoint>();
             HandsInRange.Remove(pp);
-            pp.HandPinchEnter -= HandPinched;
+            pp.OnPinchEnter -= HandPinched;
         }
     }
 }

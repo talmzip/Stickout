@@ -17,6 +17,6 @@ MonoBehaviour:
   NormalSticksAmount: 30
   OcclusionSticksAmount: 5
   JumperSticksAmount: 10
-  SpawnFrequency: 0.7
+  SpawnFrequency: 0.6
   MaxConcurrentSticks: 15
-  SticksLifeTime: 10
+  SticksLifeTime: 8

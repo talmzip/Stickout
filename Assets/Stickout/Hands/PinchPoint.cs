@@ -17,8 +17,9 @@ public class PinchPoint : MonoBehaviour
     public PhysicalHand physicalHand;
     public HandManager handManager;
     MeshRenderer mr;
+    public Transform handRoot;
 
-    public UnityAction<PinchPoint> HandPinchEnter;
+    public UnityAction<PinchPoint> OnPinchEnter;
     public UnityAction<PinchPoint> HandPinchExit;
 
     public float pinchThreshold = .0005f;
@@ -49,12 +50,15 @@ public class PinchPoint : MonoBehaviour
             UpdatePosition();
             DetectPinching();
         }
+        else
+            IsPinching = false;
 
     }
 
     void UpdatePosition()
     {
         transform.position = Vector3.Lerp(physicalHand.Bones[thumbTipIndex].position, physicalHand.Bones[indexTipIndex].position, .5f);
+        transform.rotation = handRoot.rotation;
     }
 
     // TODO: Should be moved to Ghost Hand or Hand Manager. Pinchpoint should be part of physical hand
@@ -72,7 +76,7 @@ public class PinchPoint : MonoBehaviour
             if (!IsPinching)
             {
                 IsPinching = true;
-                HandPinchEnter?.Invoke(this);
+                OnPinchEnter?.Invoke(this);
             }
         }
         else
@@ -134,13 +138,13 @@ public class PinchPoint : MonoBehaviour
                 {
                     mr.material.color = Color.white;
                     isHandCloseToPinch = true;
+
                     closeEnoughToReAttach.Stop();
                     tooFarToReAttach.Stop();
                     closeEnoughToReAttach.Play();
                 }
                 if (IsPinching)
                 {
-
                     didRecover = true;
                 }
             }

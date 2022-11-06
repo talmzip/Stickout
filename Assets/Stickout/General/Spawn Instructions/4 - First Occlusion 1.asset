@@ -16,6 +16,7 @@ MonoBehaviour:
   SpawnGroup: 0
   NormalSticksAmount: 0
   OcclusionSticksAmount: 1
+  JumperSticksAmount: 0
   SpawnFrequency: 0
   MaxConcurrentSticks: 1
-  SticksLifeTime: 15
+  SticksLifeTime: 500

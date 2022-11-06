@@ -103,13 +103,13 @@ public class HandManager : MonoBehaviour
 
             yield return null;
         }
-        
+             State = HandState.Ghost;
         // so it won't get called when tracking loss occured on ghost 
         if(wasHandPhysical)
             StartCoroutine(CountToHandRecovery());
 
 
-        State = HandState.Ghost;
+   
 
     }
 

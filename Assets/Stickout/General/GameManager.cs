@@ -29,12 +29,15 @@ public class GameManager : MonoBehaviour
     public SpawnInstructions[] AllSpawnInstructions;
     public int SpawnInstructionsIndex = -1;
 
+    public Transform TableGroup;
+    public Transform TableHolder;
+    public Vector3 spawnTableOffset;
+
     public AudioSource gameoversound;
     void Start()
     {
-        NextSpawnInstructions();
+        StartCoroutine(StartGameCoroutine());
     }
-
 
     public void NextSpawnInstructions()
     {
@@ -90,4 +93,26 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(5);
         Restart();
     }
+
+    IEnumerator StartGameCoroutine()
+    {
+        yield return new WaitForSecondsRealtime(2);
+
+        CalibrateTablePos();
+
+        NextSpawnInstructions();
+
+        // spawn detached hands & Table in offset from players' head
+        // wait for both hands to get attached
+        // spawn first level
+    }
+
+    public void CalibrateTablePos()
+    {
+        Vector3 offset = Camera.main.transform.position + Camera.main.transform.forward * spawnTableOffset.z;
+        offset.y = Camera.main.transform.position.y + spawnTableOffset.y;
+        TableGroup.position = offset;
+        TableGroup.eulerAngles = new Vector3(0, Camera.main.transform.eulerAngles.y, 0);
+    }
+
 }

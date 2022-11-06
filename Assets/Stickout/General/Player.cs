@@ -41,7 +41,7 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        RecenterOVRCamera();
+       // RecenterOVRCamera();
         
     }
 

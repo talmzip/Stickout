@@ -19,4 +19,4 @@ MonoBehaviour:
   JumperSticksAmount: 5
   SpawnFrequency: 0.8
   MaxConcurrentSticks: 8
-  SticksLifeTime: 10
+  SticksLifeTime: 8
