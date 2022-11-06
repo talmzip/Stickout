@@ -15,7 +15,7 @@ MonoBehaviour:
   WaitBeforeStarting: 3
   SpawnGroup: 0
   NormalSticksAmount: 0
-  OcclusionSticksAmount: 1
+  OcclusionSticksAmount: 4
   JumperSticksAmount: 0
   SpawnFrequency: 0
   MaxConcurrentSticks: 1

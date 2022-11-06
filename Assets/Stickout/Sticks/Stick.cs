@@ -71,6 +71,7 @@ public class Stick : MonoBehaviour
     public AnimationCurve pickedAnimScaleCurve;
     public AnimationCurve pickedAnimColorCurve;
     public Vector3 pickedScale = new Vector3(.6f, .6f, 1.8f);
+    StickBodyOverlay overlay;
 
     [Header("Stage Fold")]
     public float foldDuration;
@@ -99,13 +100,14 @@ public class Stick : MonoBehaviour
 
         stickManager = GetComponentInParent<SticksManager>();
 
+        overlay = GetComponentInChildren<StickBodyOverlay>();
+
         if (Type == StickType.Jumper)
         {
-            initialScale = new Vector3(9, 9, 0);
-            prePopScale = new Vector3(11, 11, .1f);
-            regualrScale = new Vector3(2, 2, 5f);
-            pickedScale = new Vector3(.5f, .5f, 4.5f);
-            stickTip.transform.localScale *= 3f;
+            initialScale = new Vector3(5, 5, 0);
+            prePopScale = new Vector3(7, 7, .1f);
+            regualrScale = new Vector3(1, 1, 4f);
+            pickedScale = new Vector3(1f, 1f, 4.5f);
 
         }
 
@@ -177,6 +179,11 @@ public class Stick : MonoBehaviour
             // actual leaning
             StickPivot.rotation = Quaternion.Lerp(StickPivot.rotation, targetRotation, leanToHandSpeed * Time.deltaTime);
         }
+    }
+
+    public void SetOverlay(float t,  Color color)
+    {
+        overlay.SetOverlay(t, color);
     }
 
     void Pickup()
@@ -271,7 +278,7 @@ public class Stick : MonoBehaviour
             float tColor = lerpTime / pickedAnimDuration;
             tColor = pickedAnimColorCurve.Evaluate(tColor);
             StickMR.material.color = Color.Lerp(oColor, finalColor, tColor);
-
+            overlay.SetAlpha(1 - tColor);
             yield return null;
 
         }
@@ -319,7 +326,7 @@ public class Stick : MonoBehaviour
             if (fallToStage == StickStage.Low)
                 StickMR.material.color = Color.Lerp(oColor, Color.red, t);
 
-            if(fallToStage == StickStage.Folded)
+            if (fallToStage == StickStage.Folded)
                 stickTip.transform.localScale = Vector3.Lerp(TipScale, Vector3.zero, t);
 
             yield return null;
@@ -370,6 +377,6 @@ public class Stick : MonoBehaviour
             default: return Vector3.one;
         }
 
-        
+
     }
 }

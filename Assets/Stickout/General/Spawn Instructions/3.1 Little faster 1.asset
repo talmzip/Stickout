@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47dc5cc0e46f9e54ea6c6e66cd3fb672, type: 3}
-  m_Name: 1 Just One
+  m_Name: 3.1 Little faster 1
   m_EditorClassIdentifier: 
   WaitBeforeStarting: 0
-  SpawnGroup: 1
-  NormalSticksAmount: 1
+  SpawnGroup: 0
+  NormalSticksAmount: 10
   OcclusionSticksAmount: 0
   JumperSticksAmount: 0
   SpawnFrequency: 0
-  MaxConcurrentSticks: 1
-  SticksLifeTime: 10000000
+  MaxConcurrentSticks: 2
+  SticksLifeTime: 15

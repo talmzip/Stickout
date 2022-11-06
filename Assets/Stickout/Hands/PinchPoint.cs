@@ -109,7 +109,7 @@ public class PinchPoint : MonoBehaviour
         reattachAvailablesound.Play();
 
         float lerpTime = 0;
-        while(lerpTime < .5f)
+        while(lerpTime < .2f)
         {
             lerpTime += Time.deltaTime;
             

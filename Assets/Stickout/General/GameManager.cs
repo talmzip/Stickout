@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     public Vector3 spawnTableOffset;
 
     public AudioSource gameoversound;
+    public HandManager LHand, RHand;
     void Start()
     {
         StartCoroutine(StartGameCoroutine());
@@ -99,6 +100,11 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSecondsRealtime(2);
 
         CalibrateTablePos();
+
+        while (!(LHand.State == HandState.Physical && RHand.State == HandState.Physical))
+            yield return null;
+
+        yield return new WaitForSecondsRealtime(1);
 
         NextSpawnInstructions();
 

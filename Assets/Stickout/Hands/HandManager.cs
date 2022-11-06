@@ -25,15 +25,26 @@ public class HandManager : MonoBehaviour
     AudioSource TrackingLossSound;
 
     public float RecoveryTime = 5;
-   
+
+    public Table table;
     void Start()
     {
         TrackingLossSound = GetComponent<AudioSource>();
         Physical.Init(this, skeleton);
 
-        Ghost.ChangeColor(Color.clear);
+        StartDetached();
+        //Ghost.ChangeColor(Color.clear);
 
-        StartCoroutine(waitForTrackingInit());
+        //StartCoroutine(waitForTrackingInit());
+    }
+
+    void StartDetached()
+    {
+        State = HandState.Physical;
+        pinchPoint.IsGhost = true;
+
+        Ghost.ChangeColor(Color.clear);
+        StartCoroutine(revealGhostAfterTrackingReturn());
     }
 
     void Update()
@@ -64,6 +75,8 @@ public class HandManager : MonoBehaviour
     {
         if (State == HandState.Physical)
         {
+            table.HandDetached(true);
+
             Physical.Detach();
             TrackingLossSound.Play();
             pinchPoint.IsGhost = true;

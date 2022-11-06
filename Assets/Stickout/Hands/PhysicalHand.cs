@@ -14,16 +14,46 @@ public class PhysicalHand : MonoBehaviour
     public AnimationCurve ToDetachedCurve;
 
     private SkinnedMeshRenderer mr;
-    public bool IsAttached = true;
+    public bool IsAttached = false;
+
+    public Vector3[] BonesPositions;
+    public Quaternion[] BonesRotations;
+    public bool doSaveBones = false;
+    public bool doStartFromSavedTransforms;
+
     void Start()
     {
         mr = GetComponentInChildren<SkinnedMeshRenderer>();
-        mr.material.color = TrackingColor;
+        mr.material.color = DetachedColor;
+
+        
+
+        if(doStartFromSavedTransforms)
+        {
+            for (int i = 0; i < Bones.Length; i++)
+            {
+               Bones[i].position = BonesPositions[i];
+               Bones[i].rotation= BonesRotations[i];
+            }
+            Bones[0].localPosition = Vector3.zero;
+            Bones[0].localRotation= Quaternion.identity;
+        }
     }
 
     void Update()
     {
+        if (doSaveBones)
+        {
+            BonesPositions = new Vector3[Bones.Length];
+            BonesRotations = new Quaternion[Bones.Length];
 
+            doSaveBones = false;
+            for (int i = 0; i < Bones.Length; i++)
+            {
+                BonesPositions[i] = Bones[i].position;
+                BonesRotations[i] = Bones[i].rotation;
+            }
+        }
     }
 
     public void Init(HandManager manager, OVRSkeleton ovrSkeleton)
@@ -43,6 +73,7 @@ public class PhysicalHand : MonoBehaviour
 
     public void Detach()
     {
+        StopAllCoroutines();
         StartCoroutine(detachCoroutine());
     }
 
@@ -65,6 +96,7 @@ public class PhysicalHand : MonoBehaviour
 
             yield return null;
         }
+        IsAttached = false;
     }
 
     IEnumerator reattachCoroutine()

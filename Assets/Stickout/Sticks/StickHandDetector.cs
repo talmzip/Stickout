@@ -14,7 +14,7 @@ public class StickHandDetector : MonoBehaviour
     float pinchingTime = 0;
 
     Vector3 offsetFromTip;
-
+    public AnimationCurve overlayCurve;
     void Start()
     {
         stick = GetComponentInParent<Stick>();
@@ -24,7 +24,8 @@ public class StickHandDetector : MonoBehaviour
             tipStartColor = tipMR.material.color;
         }
         tipStartColor = stick.IsOcclusionLeft ? Player.Instance.leftHandColor : Player.Instance.rightHandColor;
-
+        if(stick.Type == StickType.Occlusion)
+            tipMR.material.color = tipStartColor;
     }
 
 
@@ -58,7 +59,6 @@ public class StickHandDetector : MonoBehaviour
                     {
                         raisePinchtime = true;
                         // count pinching time
-
                         if (pinchingTime >= stick.pinchHoldTime)
                         {
                             stick.ValidPinchDetected();
@@ -79,8 +79,8 @@ public class StickHandDetector : MonoBehaviour
             }
 
             float t = pinchingTime / stick.pinchHoldTime;
-            t = Mathf.Sin(t * Mathf.PI * 0.5f);
-            tipMR.material.color = Color.Lerp(tipStartColor, Color.white, t);
+            t = overlayCurve.Evaluate(t);
+            stick.SetOverlay(t,tipStartColor);
 
             stick.isBeingPinched = pinchingTime > 0;
 
