@@ -35,6 +35,8 @@ public class PinchPoint : MonoBehaviour
     public AudioSource tooFarToReAttach;
     bool isHandCloseToPinch = false;
 
+    public GameObject pinchParticle;
+
     void Start()
     {
         ovrSkeleton = IsLeft ? Player.Instance.handSkeletonL : Player.Instance.handSkeletonR;
@@ -77,6 +79,8 @@ public class PinchPoint : MonoBehaviour
             {
                 IsPinching = true;
                 OnPinchEnter?.Invoke(this);
+                if(!IsGhost)
+                    Instantiate(pinchParticle, transform);
             }
         }
         else

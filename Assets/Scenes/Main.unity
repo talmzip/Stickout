@@ -2602,7 +2602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mrR: {fileID: 798228846}
   mrL: {fileID: 365676766}
-  normalColor: {r: 0, g: 0, b: 0, a: 1}
+  normalColor: {r: 1, g: 1, b: 1, a: 0}
   detachedColor: {r: 1, g: 1, b: 1, a: 1}
   signalDetachCurve:
     serializedVersion: 2
@@ -4254,6 +4254,8 @@ MonoBehaviour:
   reattachAvailablesound: {fileID: 1798543078}
   closeEnoughToReAttach: {fileID: 939411053}
   tooFarToReAttach: {fileID: 68036328}
+  pinchParticle: {fileID: 5494053704456347322, guid: fa7d7841af25f174f9a5db310605bf2c,
+    type: 3}
 --- !u!135 &1023660706
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -6726,7 +6728,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0472d4bb04b49c4d9a2d61bb9161d0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bStartFromLevel: 1
+  bStartFromLevel: 0
   StartFromLevel: 5
   AllSpawnInstructions:
   - {fileID: 11400000, guid: 722d9f7752f4a6c429a8913b56cce582, type: 2}
@@ -7667,6 +7669,8 @@ MonoBehaviour:
   reattachAvailablesound: {fileID: 886447749}
   closeEnoughToReAttach: {fileID: 132503364}
   tooFarToReAttach: {fileID: 584843957}
+  pinchParticle: {fileID: 5494053704456347322, guid: fa7d7841af25f174f9a5db310605bf2c,
+    type: 3}
 --- !u!135 &2107952473
 SphereCollider:
   m_ObjectHideFlags: 0
