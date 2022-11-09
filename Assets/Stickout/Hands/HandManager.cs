@@ -56,7 +56,6 @@ public class HandManager : MonoBehaviour
         }
         else
             if (State != HandState.Transition)
-            if (GameManager.Instance.SpawnInstructionsIndex > -1)
                 OnTrackingLost();
 
     }
@@ -75,6 +74,8 @@ public class HandManager : MonoBehaviour
     {
         if (State == HandState.Physical)
         {
+            State = HandState.Ghost;
+
             table.HandDetached(true);
 
             Physical.Detach();
@@ -83,9 +84,11 @@ public class HandManager : MonoBehaviour
 
         }
 
+        Ghost.ChangeColor(GhostColor);
+        pinchPoint.RecoveryOn();
 
-        Ghost.ChangeColor(Color.clear);
-        StartCoroutine(revealGhostAfterTrackingReturn());
+        // might cause some bugs on reattachment so for now simple immidiate color change will be enough.
+        //StartCoroutine(revealGhostAfterTrackingReturn());
 
 
     }
@@ -139,6 +142,7 @@ public class HandManager : MonoBehaviour
         {
             Physical.ReAttach();
             pinchPoint.IsGhost = false;
+            Ghost.ChangeColor(Color.clear);
         }
     }
 }

@@ -4249,7 +4249,7 @@ MonoBehaviour:
   handManager: {fileID: 1243229317}
   handRoot: {fileID: 1041509869}
   pinchThreshold: 0.0005
-  RecoveryPinchDistanceThreshold: 0.001
+  RecoveryPinchDistanceThreshold: 0.02
   reattachsound: {fileID: 382048641}
   reattachAvailablesound: {fileID: 1798543078}
   closeEnoughToReAttach: {fileID: 939411053}
@@ -5309,7 +5309,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314745204}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.175, z: 0}
+  m_LocalPosition: {x: 0, y: -5.244, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7664,7 +7664,7 @@ MonoBehaviour:
   handManager: {fileID: 1243229318}
   handRoot: {fileID: 94426117}
   pinchThreshold: 0.0005
-  RecoveryPinchDistanceThreshold: 0.001
+  RecoveryPinchDistanceThreshold: 0.02
   reattachsound: {fileID: 461502172}
   reattachAvailablesound: {fileID: 886447749}
   closeEnoughToReAttach: {fileID: 132503364}
@@ -7820,17 +7820,17 @@ PrefabInstance:
     - target: {fileID: 402833157236015128, guid: 461b3c902d813be4ea89d95394517f6d,
         type: 3}
       propertyPath: DetachedColor.b
-      value: 1
+      value: 0.6886792
       objectReference: {fileID: 0}
     - target: {fileID: 402833157236015128, guid: 461b3c902d813be4ea89d95394517f6d,
         type: 3}
       propertyPath: DetachedColor.g
-      value: 1
+      value: 0.6886792
       objectReference: {fileID: 0}
     - target: {fileID: 402833157236015128, guid: 461b3c902d813be4ea89d95394517f6d,
         type: 3}
       propertyPath: DetachedColor.r
-      value: 1
+      value: 0.6886792
       objectReference: {fileID: 0}
     - target: {fileID: 402833157236015128, guid: 461b3c902d813be4ea89d95394517f6d,
         type: 3}
@@ -8706,17 +8706,17 @@ PrefabInstance:
     - target: {fileID: 6875569141562729658, guid: b246abccc83101b42919cde5732ea2b4,
         type: 3}
       propertyPath: DetachedColor.b
-      value: 1
+      value: 0.6886792
       objectReference: {fileID: 0}
     - target: {fileID: 6875569141562729658, guid: b246abccc83101b42919cde5732ea2b4,
         type: 3}
       propertyPath: DetachedColor.g
-      value: 1
+      value: 0.6886792
       objectReference: {fileID: 0}
     - target: {fileID: 6875569141562729658, guid: b246abccc83101b42919cde5732ea2b4,
         type: 3}
       propertyPath: DetachedColor.r
-      value: 1
+      value: 0.6886792
       objectReference: {fileID: 0}
     - target: {fileID: 6875569141562729658, guid: b246abccc83101b42919cde5732ea2b4,
         type: 3}

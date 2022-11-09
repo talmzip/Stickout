@@ -79,8 +79,8 @@ public class PinchPoint : MonoBehaviour
             {
                 IsPinching = true;
                 OnPinchEnter?.Invoke(this);
-                if(!IsGhost)
-                    Instantiate(pinchParticle, transform);
+               /* if(!IsGhost)
+                    Instantiate(pinchParticle, transform);*/
             }
         }
         else
